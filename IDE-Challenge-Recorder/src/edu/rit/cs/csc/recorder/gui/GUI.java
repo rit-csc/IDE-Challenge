@@ -121,7 +121,7 @@ public class GUI {
 		// Main window
 		//----------------------------------------------------------------------
 		
-		final JFrame f = new JFrame(Settings.title);
+		final JFrame f = new JFrame(Settings.Title);
 		Container p = f.getContentPane();
 		p.setLayout(new BorderLayout());
 		p.add(middle, BorderLayout.CENTER);

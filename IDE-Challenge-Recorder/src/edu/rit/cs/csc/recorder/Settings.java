@@ -13,7 +13,15 @@ public final class Settings {
 	// User viewable strings
 	//--------------------------------------------------------------------------
 	
-	public static final String title = "CSC Recorder";
+	public static final String Version = "0.2";
+	public static final String Title = "CSC Recorder v" + Version;
+	
+	public static String RunStatement = "java -jar csc-recorder.jar";
+	//static {
+	//	StackTraceElement[] stack = Thread.currentThread ().getStackTrace ();
+	//	StackTraceElement main = stack[stack.length - 1];
+	//	RunStatement = "java " + main.getClassName ();
+	//}
 	
 	public static final String RecordKeysTip = "Records the amount of key presses";
 	public static final String RecordKeysText = "Keystrokes";
@@ -26,11 +34,11 @@ public final class Settings {
 	public static final String RecordMouseMovementTip = "Records how far the mouse travels";
 	public static final String RecordMouseMovementText = "Distance";
 	public static final String RecordMouseMovementDetailsTip = "Records where the mouse spends its time";
-	public static final String RecordMouseMovementDetailsText = "Locations";
+	public static final String RecordMouseMovementDetailsText = "Movement";
 	
 	public static final String RecordMouseClicksText = "Buttons";
 	public static final String RecordMouseClicksTip = "Records how often each mouse button is clicked";	
-	public static final String RecordMouseClicksDetailsText = "Click Locations";
+	public static final String RecordMouseClicksDetailsText = "Points";
 	public static final String RecordMouseClicksDetailsTip = "Records where each button is clicked";
 	
 	public static final String StartText = "Record";

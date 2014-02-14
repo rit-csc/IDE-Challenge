@@ -7,5 +7,10 @@
 			<attribute name="javadoc_location" value="file:/home/user/workspace/IDE-Challenge-Recorder/libs/JNativeHook/doc/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/commons-cli-1.2/commons-cli-1.2.jar" sourcepath="libs/commons-cli-1.2/commons-cli-1.2-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/IDE-Challenge-Recorder/libs/commons-cli-1.2/commons-cli-1.2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
