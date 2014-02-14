@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -23,25 +22,27 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
+
+import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jdt.annotation.Nullable;
 
 import edu.rit.cs.csc.recorder.Settings;
 import edu.rit.cs.csc.recorder.features.Feature;
 
 //TODO change things to use Action and put all gui operations on the event dispatching thread
 
-public class GUI {
+@NonNullByDefault public class GUI {
 	
 	private final Set<Action> actions = new HashSet<Action>();
 	
 	//TODO document - Feature collection cannot be null but the Map can be null
 	public GUI(Map<String, Collection<Feature>> options) {
-		if(options == null) {
-			options = Collections.emptyMap();
-		}
 		
 		//----------------------------------------------------------------------
 		// Option groups
@@ -56,8 +57,11 @@ public class GUI {
 			group.setLayout(new BoxLayout(group, BoxLayout.PAGE_AXIS));
 			
 			for(Feature f: options.get(title)) {
+				Action action = f.getAction();
 				JCheckBox box = new JCheckBox();
-				box.setAction(f.getAction());
+				box.setAction(action);
+				box.getActionMap().put("shortcut", action);
+				box.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke)action.getValue(Action.ACCELERATOR_KEY), "shortcut");
 				actions.add(box.getAction());
 				group.add(box);
 			}
@@ -80,7 +84,11 @@ public class GUI {
 		JButton start = new JButton(Settings.StartText);
 		start.setToolTipText(Settings.StartTip);
 		start.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(@Nullable ActionEvent e) {
+				if(e == null) {
+					return;
+				}
+				
 				JButton b = (JButton)e.getSource();
 				String text = b.getText();
 				
@@ -136,7 +144,6 @@ public class GUI {
 			f.setLocationRelativeTo(null);
 		} else {
 			Point placement = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
-			System.out.println(placement);
 			int newX = placement.x - (f.getWidth() / 2);
 			int newY = placement.y - (f.getHeight() / 2);
 			if(newX >= 0 && newY >= 0) {
@@ -147,8 +154,8 @@ public class GUI {
 		//press ESC to close and exit the program
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(new KeyEventPostProcessor() {
 			@Override
-			public boolean postProcessKeyEvent(KeyEvent e) {
-				if( e.getKeyCode() != KeyEvent.VK_ESCAPE) {
+			public boolean postProcessKeyEvent(@Nullable KeyEvent e) {
+				if( e != null && e.getKeyCode() != KeyEvent.VK_ESCAPE) {
 					return false;
 				}
 				

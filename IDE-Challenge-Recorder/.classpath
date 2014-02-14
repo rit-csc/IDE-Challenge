@@ -12,5 +12,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/IDE-Challenge-Recorder/libs/commons-cli-1.2/commons-cli-1.2-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="org.eclipse.jdt.annotation_1.0.1.v20130111-135246.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

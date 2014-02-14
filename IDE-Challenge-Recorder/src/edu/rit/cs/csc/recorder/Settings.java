@@ -1,7 +1,9 @@
 package edu.rit.cs.csc.recorder;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
 
-public final class Settings {
+
+@NonNullByDefault public final class Settings {
 	
 	//--------------------------------------------------------------------------
 	// Options for debugging

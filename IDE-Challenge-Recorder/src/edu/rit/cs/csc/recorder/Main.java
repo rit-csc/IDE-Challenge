@@ -1,12 +1,11 @@
 package edu.rit.cs.csc.recorder;
 
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import javax.swing.Action;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -15,19 +14,16 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.eclipse.jdt.annotation.NonNullByDefault;
 
 import edu.rit.cs.csc.recorder.features.Feature;
 import edu.rit.cs.csc.recorder.gui.GUI;
 
 
-public class Main {
+@NonNullByDefault public class Main {
 	
 	
 	public static Option buildOption(Feature f) {
-		if( f == null) {
-			throw new IllegalArgumentException("The given feature cannot be null");
-		}
-		
 		return new Option(f.getId(), f.getName(), false, f.getTip());
 	}
 	
@@ -72,6 +68,9 @@ public class Main {
 		clOptions.addOption(versionOption);
 		for(String group: options.keySet()) {
 			for(Feature f: options.get(group)) {
+				if(f == null) {
+					continue;
+				}
 				clOptions.addOption(buildOption(f));
 			}
 		}
@@ -106,7 +105,9 @@ public class Main {
 		//configure the features
 		for(String group: options.keySet()) {
 			for(Feature f: options.get(group)) {
-				f.getAction().putValue(Action.SELECTED_KEY, cmd.hasOption(f.getId()));
+				if(cmd.hasOption(f.getId())) {
+					f.getAction().actionPerformed(new ActionEvent(f, ActionEvent.ACTION_PERFORMED, f.getName() + " set from command line"));
+				}
 			}
 		}
 		
