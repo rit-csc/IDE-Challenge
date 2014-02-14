@@ -3,9 +3,11 @@ package edu.rit.cs.csc.recorder.gui;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.KeyEventPostProcessor;
 import java.awt.KeyboardFocusManager;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -41,8 +43,11 @@ public class GUI {
 			options = Collections.emptyMap();
 		}
 		
+		//----------------------------------------------------------------------
+		// Option groups
+		//----------------------------------------------------------------------
+		
 		JPanel middle = new JPanel();
-		//middle.setLayout(new BoxLayout(middle, BoxLayout.LINE_AXIS));
 		middle.setLayout(new GridLayout(1,1));
 		
 		for(String title: options.keySet()) {
@@ -59,58 +64,6 @@ public class GUI {
 			
 			middle.add(group);
 		}
-		
-		
-		/*
-		//----------------------------------------------------------------------
-		// Keyboard parts
-		//----------------------------------------------------------------------
-		
-		JCheckBox keyBox = new JCheckBox(Settings.RecordKeysText);
-		keyBox.setToolTipText(Settings.RecordKeysTip);
-		
-		JCheckBox keyDetailsBox = new JCheckBox(Settings.RecordKeyDetailsText);
-		keyDetailsBox.setToolTipText(Settings.RecordKeyDetailsTip);
-		
-		
-		JPanel keyboardPanel = new JPanel();
-		keyboardPanel.setBorder(BorderFactory.createTitledBorder(Settings.RecordKeysTitle));
-		keyboardPanel.setLayout(new BoxLayout(keyboardPanel, BoxLayout.PAGE_AXIS));
-		keyboardPanel.add(keyBox);
-		keyboardPanel.add(keyDetailsBox);
-		
-		options.add(keyBox);
-		options.add(keyDetailsBox);
-		
-		//----------------------------------------------------------------------
-		// Mouse parts
-		//----------------------------------------------------------------------
-		
-		JCheckBox movementBox = new JCheckBox(Settings.RecordMouseMovementText);
-		movementBox.setToolTipText(Settings.RecordMouseMovementTip);
-		
-		JCheckBox movementDetailsBox = new JCheckBox(Settings.RecordMouseMovementDetailsText);
-		movementDetailsBox.setToolTipText(Settings.RecordMouseMovementDetailsTip);
-		
-		JCheckBox clickBox = new JCheckBox(Settings.RecordMouseClicksText);
-		clickBox.setToolTipText(Settings.RecordMouseClicksTip);
-		
-		JCheckBox clickDetailsBox = new JCheckBox(Settings.RecordMouseClicksDetailsText);
-		clickDetailsBox.setToolTipText(Settings.RecordMouseClicksDetailsTip);
-		
-		JPanel mousePanel = new JPanel();
-		mousePanel.setBorder(BorderFactory.createTitledBorder(Settings.RecordMouseTitle));
-		mousePanel.setLayout(new BoxLayout(mousePanel, BoxLayout.PAGE_AXIS));
-		mousePanel.add(movementBox);
-		mousePanel.add(movementDetailsBox);
-		mousePanel.add(clickBox);
-		mousePanel.add(clickDetailsBox);
-		
-		options.add(movementBox);
-		options.add(movementDetailsBox);
-		options.add(clickBox);
-		options.add(clickDetailsBox);
-		 */
 		
 		//----------------------------------------------------------------------
 		// Bottom parts
@@ -134,7 +87,7 @@ public class GUI {
 				if(Settings.StartText.equals(text)) {
 					//TODO start recording or the timer to start recording
 					
-					//lock button states so the user knows what's being recorded
+					//lock button states so the user knows what's being recorded  //TODO do we want them to be able to stop recording something if it's taking up too much CPU/memory?
 					for(Action ab: actions) {
 						ab.setEnabled(false);
 					}
@@ -171,22 +124,30 @@ public class GUI {
 		final JFrame f = new JFrame(Settings.title);
 		Container p = f.getContentPane();
 		p.setLayout(new BorderLayout());
-		//p.add(keyboardPanel, BorderLayout.WEST);
-		//p.add(mousePanel, BorderLayout.EAST);
 		p.add(middle, BorderLayout.CENTER);
 		p.add(bottomPanel, BorderLayout.SOUTH);
 		
-		f.pack();
-		f.setLocationRelativeTo(null);
 		f.setAlwaysOnTop(Settings.OnTop);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		//center the window
+		f.pack();
+		if(GraphicsEnvironment.isHeadless()) {
+			f.setLocationRelativeTo(null);
+		} else {
+			Point placement = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+			System.out.println(placement);
+			int newX = placement.x - (f.getWidth() / 2);
+			int newY = placement.y - (f.getHeight() / 2);
+			if(newX >= 0 && newY >= 0) {
+				f.setLocation(newX, newY);
+			}
+		}
 		
-		//press ESC to close the program
+		//press ESC to close and exit the program
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventPostProcessor(new KeyEventPostProcessor() {
 			@Override
 			public boolean postProcessKeyEvent(KeyEvent e) {
-				System.out.println("KeyPressed: " + e.getKeyChar() + ", " + e.getKeyCode());
 				if( e.getKeyCode() != KeyEvent.VK_ESCAPE) {
 					return false;
 				}
@@ -205,14 +166,6 @@ public class GUI {
 				f.setVisible(true);
 			}
 		});
-	}
-	
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		GUI gui = new GUI(null);
 	}
 	
 }
